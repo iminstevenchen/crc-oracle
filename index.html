@@ -394,10 +394,10 @@ function setStep(n){["1","2","3"].forEach(i=>{const el=document.getElementById("
  window.scrollTo({top:0,behavior:"smooth"});}
 function backToInput(){setStep(1);}function restart(){setStep(1);}
 function doParse(){const t=document.getElementById("nl").value.trim();if(!t){alert("請先輸入病患條件");return;}
- parsed=parseNL(t);renderParsed();buildVerify();setStep(2);}
+ parsed=parseNL(t);current={};renderParsed();buildVerify();setStep(2);}
 
 function renderParsed(){const g=document.getElementById("pgrid");g.innerHTML="";
- FIELDS.forEach(f=>{const hit=parsed[f.k]!=null&&parsed[f.k]!=="";const val=hit?parsed[f.k]:f.def;current[f.k]=val;
+ FIELDS.forEach(f=>{const hit=parsed[f.k]!=null&&parsed[f.k]!=="";if(current[f.k]===undefined)current[f.k]=hit?parsed[f.k]:f.def;const val=current[f.k];
   const d=document.createElement("div");d.className="field"+(hit?" hit":"");let ctl="";
   if(f.type==="num")ctl=`<input type="number" value="${val}" oninput="current['${f.k}']=+this.value">`;
   else if(f.type==="cb"){ctl='<select onchange="current[\''+f.k+'\']=this.value;renderParsed2()">';
