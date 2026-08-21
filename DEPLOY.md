@@ -18,7 +18,7 @@ vercel                 # 第一次部署，一路按 Enter 用預設值
 vercel --prod          # 產生正式網址
 ```
 
-跑完會給你一個網址，例如 `https://gut-instinct-xxxx.vercel.app`，把它傳給組員即可。
+跑完會給你一個網址，例如 `https://crc-oracle-xxxx.vercel.app`，把它傳給組員即可。
 
 ## 方法 B：從 GitHub 匯入（適合之後持續更新）
 1. 把這個 `deploy/` 資料夾推上一個 GitHub repo（見下方「Git 已初始化」）。
