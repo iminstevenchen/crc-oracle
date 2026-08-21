@@ -3,7 +3,7 @@
 > **Real-World Intelligence for Personalized Colorectal Cancer Outcomes**
 > 大腸直腸癌相似病患智慧查詢 — 用一句自然語言描述病患，找出資料庫中最相似的一群病患並給出存活與術後結果。
 
-**線上 Demo：** https://gut-instinct.vercel.app
+**線上 Demo：** https://crc-oracle.vercel.app
 
 StanCode 201 專題。醫師以自然語言輸入臨床特徵，系統依官方 codebook 轉為結構化變數，透過主成分分析（PCA）進行降維與相似族群分層，再以 Kaplan–Meier 呈現存活結果。
 
