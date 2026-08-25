@@ -177,7 +177,7 @@ footer{max-width:1180px;margin:0 auto;padding:22px;color:var(--faint);font-size:
   <section class="hidden" id="card3">
     <div class="card fade">
       <h2>Selection 摘要</h2>
-      <p class="sub">在 PCA 主成分空間中，取與此病患歐氏距離最近的族群作為對照。</p>
+      <p class="sub">在 FAMD 主成分空間中，取與此病患標準化距離最近的族群作為對照。</p>
       <div class="kpis" id="kpis"></div>
       <div class="note" id="cohortline"></div>
     </div>
@@ -207,7 +207,7 @@ footer{max-width:1180px;margin:0 auto;padding:22px;color:var(--faint);font-size:
     </div>
 
     <div class="card fade">
-      <h2>PCA 主成分空間位置</h2>
+      <h2>FAMD 主成分空間位置</h2>
       <p class="sub">每個點是一位真實病患在 PC1–PC2 平面的座標。灰＝全體，藍＝選定相似族群，紅＝目標病患。</p>
       <canvas id="pca" height="300"></canvas>
       <div class="leg">
@@ -219,7 +219,7 @@ footer{max-width:1180px;margin:0 auto;padding:22px;color:var(--faint);font-size:
     </div>
 
     <div class="card fade">
-      <h2>PCA 主成分的臨床意義</h2>
+      <h2>FAMD 主成分的臨床意義</h2>
       <p class="sub">此族群是依 16 個臨床變項降維後的座標找出，前三主成分的解讀如下。</p>
       <div class="pcabox">
         <div class="pc"><h4>PC1 · 26.7%</h4><div class="bar"><i style="width:53%"></i></div>
