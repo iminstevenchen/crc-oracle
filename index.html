@@ -336,12 +336,11 @@ footer{max-width:1180px;margin:0 auto;padding:22px;color:var(--faint);font-size:
     </div>
 <div class="card fade">
       <h2>FAMD 主成分的臨床意義</h2>
-      <p class="sub">此族群是依 FAMD v3 模型的 23 個臨床變數（11 個連續＋12 個類別）降維後的座標找出。模型共保留 5 個主成分，解讀如下。</p>
+      <p class="sub">此族群是依 FAMD v3 模型的 23 個臨床變數（10 個連續＋13 個類別，年齡以 5 分層計入類別）降維後的座標找出。模型共保留 5 個主成分，解讀如下。</p>
       <div class="pcabox" id="pcabox"></div>
       <p class="note" id="pcfoot"></p>
-主成分載荷依 FAMD v3（23 變數，prince 套件）重新計算，前三軸累積解釋變異約 24.15%。FAMD 的變異百分比計算方式跟線性 PCA 不同（分母含類別指標矩陣的總慣性），數字不能直接跟舊版 PCA 的 explained_variance_ratio 相比。</p>
       <div class="warn">
-        <b>資料版本與限制：</b>本頁採用正式的 <strong>FAMD v3 模型</strong>（混合連續＋類別變數，共 23 個特徵，訓練樣本 12,196 位）。Cox 存活模型 5-fold 交叉驗證 C-index 約 0.798，12 例held-out驗證約 0.757。惟此為去識別擬真資料，仍僅供<strong>方法學與研究示範</strong>，不可作為臨床判讀或投稿依據。
+        <b>資料版本與限制：</b>本頁採用正式的 <strong>FAMD v3 模型</strong>（混合連續＋類別變數，共 <span id="wnFeat">–</span> 個特徵，訓練樣本 <span id="wnN">–</span> 位）。Cox 存活模型 5-fold 交叉驗證 C-index <span id="wnCv">–</span>，12 例 held-out 驗證 <span id="wnHo">–</span>。惟此為去識別擬真資料，仍僅供<strong>方法學與研究示範</strong>，不可作為臨床判讀或投稿依據。
       </div>
     </div>
 
@@ -775,9 +774,11 @@ function renderParsed(){
     +'<span>母體預設代入 <b id="mvcD">'+c.default+'</b></span>'
     +'<button class="link" style="padding:0 6px;font-size:12px" onclick="advClear();renderParsed();buildVerify()">↺ 全部回到解析值</button>'
     +'</div>'
-    +'<div class="fsec">連續變數（11 項）</div>'
-    +'<div class="fgrid">'+CONT_ORDER.map(featCardHTML).join('')+'</div>'
-    +'<div class="fsec">類別變數（12 項）</div>'
+    +'<div class="fsec">年齡（1 項）<span style="font-weight:400;color:var(--mut)"> · 填實際歲數，模型自動歸入 5 個年齡分層</span></div>'
+    +'<div class="fgrid">'+featCardHTML('AGE')+'</div>'
+    +'<div class="fsec">連續變數（'+F.enc.cont.length+' 項）</div>'
+    +'<div class="fgrid">'+CONT_ORDER.filter(n=>n!=='AGE').map(featCardHTML).join('')+'</div>'
+    +'<div class="fsec">類別變數（'+CAT_ORDER.length+' 項）<span style="font-weight:400;color:var(--mut)"> · 模型端另含 age_group，合計 '+F.enc.cat_vars.length+' 個類別變數</span></div>'
     +'<div class="fgrid">'+CAT_ORDER.map(featCardHTML).join('')+'</div>';
 }
 
@@ -1054,7 +1055,7 @@ function renderResults(c){
    statBlock('全因存活（OS）','上圖藍線在各時間點的存活率，括號為 Greenwood 95% CI',osStats,medLine)
   +statBlock('族群術後結果',`這 ${idx.length} 位相似病患後來怎麼了`,outStats)
   +`<div class="note" style="margin-top:10px;color:var(--faint);font-size:11.5px">模型：FAMD v3（23 特徵）· 5-fold CV C-index ${F.meta.cv5_cindex} · held-out 12 例 C-index ${F.meta.holdout12_cindex}</div>`;
- drawKM(kSel,kAll);initPcAxes();drawPCA(idx,p);
+ drawKM(kSel,kAll);initPcAxes();fillModelMeta();drawPCA(idx,p);
  renderPCA_meaning();updatePcNote();
 }
 
@@ -1090,7 +1091,7 @@ function stepLine(x,k,X,Y,color,w){x.strokeStyle=color;x.lineWidth=w;x.lineJoin=
 function ctxOf(id){const c=document.getElementById(id);const dpr=window.devicePixelRatio||1,w=c.clientWidth||700,h=300;
  c.width=w*dpr;c.height=h*dpr;c.style.height=h+'px';const x=c.getContext('2d');x.scale(dpr,dpr);x.clearRect(0,0,w,h);return {x,w,h};}
 /* ---- 主成分：解釋變異由 pc_sd²/總慣性 現算 ---- */
-const PC_INERTIA=F.enc.cont.length+F.enc.one_hot.length;      /* 11 連續 + 44 指標欄 = 55 */
+const PC_INERTIA=F.enc.cont.length+F.enc.one_hot.length;      /* 連續變數數 + one-hot 指標欄數（現行模型 10+49=59） */
 const pcPct=j=>F.enc.pc_sd[j]**2/PC_INERTIA*100;
 const PC_COL=['pc1','pc2','pc3','pc4','pc5'];
 /* 五軸主要載荷皆取自官方 famd_coefficients_v3.json 的 column_contributions（v3.1 年齡5分層版）。 */
@@ -1112,10 +1113,18 @@ function renderPCA_meaning(){
   }).join('');
   const c3=[0,1,2].reduce((a,j)=>a+pcPct(j),0), c5=[0,1,2,3,4].reduce((a,j)=>a+pcPct(j),0);
   const f=document.getElementById('pcfoot');
-  if(f)f.textContent=`解釋變異由模型的 pc_sd² ÷ 總慣性 ${PC_INERTIA}（11 個連續變數＋44 個類別指標欄）現算；`
+  if(f)f.textContent=`解釋變異由模型的 pc_sd² ÷ 總慣性 ${PC_INERTIA}（${F.enc.cont.length} 個連續變數＋${F.enc.one_hot.length} 個類別指標欄）現算；`
     +`前三軸累積約 ${c3.toFixed(2)}%、五軸累積約 ${c5.toFixed(2)}%。`
     +`FAMD 的變異百分比算法跟線性 PCA 不同（分母含類別指標矩陣的總慣性），不能直接跟舊版 PCA 的 explained_variance_ratio 相比。`
     +`主要載荷取自官方 FAMD 係數檔（column contributions），五軸皆為實際計算值。`;
+}
+/* 限制區塊的模型數字，一律從 F.meta 現讀，換模型不會留下舊數字 */
+function fillModelMeta(){
+  const m=F.meta, set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
+  set('wnFeat', m.n_continuous+m.n_categorical);
+  set('wnN',    m.n_train.toLocaleString());
+  set('wnCv',   '約 '+m.cv5_cindex.toFixed(4));
+  set('wnHo',   '約 '+m.holdout12_cindex.toFixed(4));
 }
 function initPcAxes(){
   ['pcx','pcy'].forEach((id,k)=>{
