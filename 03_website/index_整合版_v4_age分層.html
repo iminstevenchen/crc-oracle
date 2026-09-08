@@ -606,6 +606,11 @@ function applyI18N(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.getAttribute('data-i18n'));});
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.getAttribute('data-i18n-ph'));});
   const s2=document.querySelector('#card2 .sub'); if(s2)s2.innerHTML=t('s2.sub',Nall.toLocaleString());
+  /* 輸入框預填的範例句要跟著語言走（含首次載入時 markup 裡的中文預設值） */
+  const nl=document.getElementById('nl');
+  if(nl){const v=nl.value.trim();
+    let i=EXAMPLES.indexOf(v); if(i<0)i=EXAMPLES_EN.indexOf(v);
+    if(i>=0)nl.value=examples()[i]; else if(!v)nl.value=examples()[0];}
   const lg=document.getElementById('legAll'); if(lg)lg.textContent=isZH()?'（'+Nall.toLocaleString()+'）':' ('+Nall.toLocaleString()+')';
   ['zh','en'].forEach(l=>{const b=document.getElementById('lang-'+l); if(b)b.classList.toggle('on',LANG===l);});
   fillModelMeta();
@@ -613,15 +618,17 @@ function applyI18N(){
 function setLang(l){
   if(l===LANG)return;
   const nl=document.getElementById('nl');
-  const wasExample=nl&&examples().includes(nl.value.trim());
+  /* 先在「舊語言」的清單裡認出是第幾則範例，切換後才換成同一則的新語言版本 */
+  const exIdx = nl ? examples().indexOf(nl.value.trim()) : -1;
   LANG=l; try{localStorage.setItem('crcLang',l);}catch(e){}
   applyI18N(); initChips();
-  /* 輸入框若還停在範例句，就換成另一語言的同一則範例 */
-  if(wasExample){const i=examples().indexOf(nl.value.trim());
-    LANG=l; nl.value=examples()[i>=0?i:0];}
-  else if(nl&&!nl.value.trim())nl.value='';
-  if(!document.getElementById('card2').classList.contains('hidden')){renderParsed();buildVerify();}
-  if(!document.getElementById('card3').classList.contains('hidden')&&lastC){renderResults(lastC);}
+  if(exIdx>=0 && nl) nl.value=examples()[exIdx];
+  /* 步驟 2／3 只要已經產生過內容就重繪，不管當下是否可見——
+     否則在步驟 3 切語言後回到步驟 2，會看到上一個語言的殘留畫面 */
+  if(document.getElementById('pgrid') && document.getElementById('pgrid').children.length){
+    renderParsed(); buildVerify();
+  }
+  if(lastC) renderResults(lastC);
 }
 
 /* ============ 進階：23 項特徵手動指定（優先於自然語言） ============
@@ -960,7 +967,7 @@ function advSetSmart(n,v){
   adv[n]=v;
 }
 function featHintHTML(n){
-  const s=featSource(n), un=unitOf(n), u=un?un+'　·　':'';
+  const s=featSource(n), un=unitOf(n), u=un?un+(isZH()?'　·　':' · '):'';
   return u+(s==='manual'?t('hint.was',baseSrcTxt(n))
        : s==='nl'?t('hint.defis',defTxt(n))
        : t('hint.none',t(isCont(n)?'hint.median':'hint.mode')));
@@ -1022,7 +1029,7 @@ function renderParsed(){
 let showAllSyn=false;
 function buildVerify(){
  const box=document.getElementById("cbmap");if(!box)return;
- const cbFields=[['sex','性別'],['stage','期別'],['site','腫瘤位置'],['grade','分化程度'],['op','手術術式']];
+ const cbFields=[['sex','fld.sex'],['stage','fld.stage'],['site','fld.site'],['grade','fld.grade'],['op','fld.op']];
  let rows=cbFields.map(([k,lab])=>{const code=current[k];const o=code!==''&&code!=null?cbByCode(k,code):null;
    return `<tr><td>${t(lab)}</td><td><code>${CODEBOOK[k].variable}</code></td><td class="idx">${o?o.code:'—'}</td><td>${o?o.zh:t('vfy.none')}</td><td style="color:var(--mut)">${o?o.en:''}</td></tr>`;}).join("");
  let full="";
