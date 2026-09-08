@@ -1352,8 +1352,10 @@ function fillModelMeta(){
 }
 function initPcAxes(){
   ['pcx','pcy'].forEach((id,k)=>{
-    const el=document.getElementById(id);if(!el||el.options.length)return;
-    el.innerHTML=[0,1,2,3,4].map(j=>`<option value="${j}" ${j===k?'selected':''}>PC${j+1}（${pcPct(j).toFixed(2)}%）</option>`).join('');
+    const el=document.getElementById(id);if(!el)return;
+    const keep=el.options.length?el.value:String(k);
+    const L=isZH()?['（','）']:[' (',')'];
+    el.innerHTML=[0,1,2,3,4].map(j=>`<option value="${j}" ${String(j)===keep?'selected':''}>PC${j+1}${L[0]}${pcPct(j).toFixed(2)}%${L[1]}</option>`).join('');
   });
 }
 function pcAxis(id,dflt){const el=document.getElementById(id);return el?+el.value:dflt;}
