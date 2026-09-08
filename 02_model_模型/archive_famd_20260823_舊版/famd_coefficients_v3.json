@@ -1,0 +1,255 @@
+{
+  "version": "v3-famd",
+  "method": "FAMD (mixed continuous + categorical), prince 0.20.1",
+  "n_continuous": 11,
+  "n_categorical": 12,
+  "features": {
+    "continuous": [
+      {
+        "code": "AGE",
+        "label_zh": "診斷年齡"
+      },
+      {
+        "code": "BMI",
+        "label_zh": "BMI"
+      },
+      {
+        "code": "ELN",
+        "label_zh": "摘除淋巴結數"
+      },
+      {
+        "code": "PLN",
+        "label_zh": "陽性淋巴結數"
+      },
+      {
+        "code": "LN_ratio",
+        "label_zh": "淋巴結陽性比率"
+      },
+      {
+        "code": "WID",
+        "label_zh": "腫瘤寬度(cm)"
+      },
+      {
+        "code": "LEN",
+        "label_zh": "腫瘤長度(cm)"
+      },
+      {
+        "code": "RM",
+        "label_zh": "切除margin(cm)"
+      },
+      {
+        "code": "LAB_CEA_log",
+        "label_zh": "術前CEA(log)"
+      },
+      {
+        "code": "LAB_ALB",
+        "label_zh": "術前白蛋白"
+      },
+      {
+        "code": "LAB_HB",
+        "label_zh": "術前血色素"
+      }
+    ],
+    "categorical": [
+      {
+        "code": "SEX",
+        "label_zh": "性別"
+      },
+      {
+        "code": "TNM_stage",
+        "label_zh": "TNM總分期"
+      },
+      {
+        "code": "T_stage",
+        "label_zh": "T分期"
+      },
+      {
+        "code": "N_stage",
+        "label_zh": "N分期"
+      },
+      {
+        "code": "M_stage",
+        "label_zh": "M分期"
+      },
+      {
+        "code": "site_group",
+        "label_zh": "腫瘤側別"
+      },
+      {
+        "code": "HT_adenoca",
+        "label_zh": "腺癌型組織學"
+      },
+      {
+        "code": "HG_grade",
+        "label_zh": "分化程度"
+      },
+      {
+        "code": "GA_infiltrative",
+        "label_zh": "浸潤型外觀"
+      },
+      {
+        "code": "CI",
+        "label_zh": "環周侵犯"
+      },
+      {
+        "code": "IR_curative",
+        "label_zh": "根治性切除"
+      },
+      {
+        "code": "OT_emergency",
+        "label_zh": "急診手術"
+      }
+    ]
+  },
+  "eigen": {
+    "eigenvalues": [
+      6.5926,
+      3.4959,
+      3.1939,
+      2.6332,
+      2.4737
+    ],
+    "pct_variance": [
+      11.99,
+      6.36,
+      5.81,
+      4.79,
+      4.5
+    ],
+    "cumulative_pct_top3": 24.15,
+    "note": "FAMD的變異百分比計算方式跟線性PCA不同(分母含類別指標矩陣的總慣性)，數字不能直接跟PCA版的explained_variance_ratio相比。"
+  },
+  "column_contributions": {
+    "PC1": {
+      "AGE": 0.0,
+      "BMI": 0.0023,
+      "ELN": 0.0034,
+      "PLN": 0.0568,
+      "LN_ratio": 0.0606,
+      "WID": 0.0007,
+      "LEN": 0.0006,
+      "RM": 0.0023,
+      "LAB_CEA_log": 0.0459,
+      "LAB_ALB": 0.0115,
+      "LAB_HB": 0.0094,
+      "CI": 0.0348,
+      "GA_infiltrative": 0.0117,
+      "HG_grade": 0.0175,
+      "HT_adenoca": 0.0002,
+      "IR_curative": 0.084,
+      "M_stage": 0.1007,
+      "N_stage": 0.0745,
+      "OT_emergency": 0.0052,
+      "SEX": 0.0004,
+      "TNM_stage": 0.1227,
+      "T_stage": 0.0592,
+      "site_group": 0.0027
+    },
+    "PC2": {
+      "AGE": 0.0135,
+      "BMI": 0.0053,
+      "ELN": 0.0283,
+      "PLN": 0.0051,
+      "LN_ratio": 0.0087,
+      "WID": 0.001,
+      "LEN": 0.0004,
+      "RM": 0.0351,
+      "LAB_CEA_log": 0.0006,
+      "LAB_ALB": 0.0394,
+      "LAB_HB": 0.0479,
+      "CI": 0.0733,
+      "GA_infiltrative": 0.0,
+      "HG_grade": 0.0253,
+      "HT_adenoca": 0.0032,
+      "IR_curative": 0.0352,
+      "M_stage": 0.0383,
+      "N_stage": 0.0193,
+      "OT_emergency": 0.003,
+      "SEX": 0.005,
+      "TNM_stage": 0.1732,
+      "T_stage": 0.1097,
+      "site_group": 0.0416
+    },
+    "PC3": {
+      "AGE": 0.0043,
+      "BMI": 0.0037,
+      "ELN": 0.0019,
+      "PLN": 0.0286,
+      "LN_ratio": 0.0427,
+      "WID": 0.0192,
+      "LEN": 0.0172,
+      "RM": 0.0778,
+      "LAB_CEA_log": 0.001,
+      "LAB_ALB": 0.0238,
+      "LAB_HB": 0.0223,
+      "CI": 0.0043,
+      "GA_infiltrative": 0.0011,
+      "HG_grade": 0.0306,
+      "HT_adenoca": 0.0108,
+      "IR_curative": 0.012,
+      "M_stage": 0.0125,
+      "N_stage": 0.1134,
+      "OT_emergency": 0.0068,
+      "SEX": 0.0076,
+      "TNM_stage": 0.1667,
+      "T_stage": 0.0455,
+      "site_group": 0.087
+    },
+    "PC4": {
+      "AGE": 0.01,
+      "BMI": 0.0002,
+      "ELN": 0.0036,
+      "PLN": 0.0167,
+      "LN_ratio": 0.0132,
+      "WID": 0.0432,
+      "LEN": 0.0425,
+      "RM": 0.0003,
+      "LAB_CEA_log": 0.0033,
+      "LAB_ALB": 0.0021,
+      "LAB_HB": 0.0007,
+      "CI": 0.0,
+      "GA_infiltrative": 0.0021,
+      "HG_grade": 0.0313,
+      "HT_adenoca": 0.1544,
+      "IR_curative": 0.0098,
+      "M_stage": 0.0151,
+      "N_stage": 0.0256,
+      "OT_emergency": 0.0002,
+      "SEX": 0.0,
+      "TNM_stage": 0.2077,
+      "T_stage": 0.1515,
+      "site_group": 0.0028
+    },
+    "PC5": {
+      "AGE": 0.0004,
+      "BMI": 0.0018,
+      "ELN": 0.0037,
+      "PLN": 0.0203,
+      "LN_ratio": 0.0124,
+      "WID": 0.0242,
+      "LEN": 0.0248,
+      "RM": 0.1025,
+      "LAB_CEA_log": 0.0078,
+      "LAB_ALB": 0.0027,
+      "LAB_HB": 0.0001,
+      "CI": 0.0003,
+      "GA_infiltrative": 0.0031,
+      "HG_grade": 0.0407,
+      "HT_adenoca": 0.0119,
+      "IR_curative": 0.0109,
+      "M_stage": 0.0259,
+      "N_stage": 0.0439,
+      "OT_emergency": 0.0042,
+      "SEX": 0.0225,
+      "TNM_stage": 0.1379,
+      "T_stage": 0.1317,
+      "site_group": 0.108
+    }
+  },
+  "cox_model": {
+    "encoding": "連續變數z-score + 類別變數one-hot(drop-first)",
+    "train_cindex": 0.7993,
+    "cv5_cindex": 0.7978,
+    "holdout12_cindex": 0.7568
+  }
+}

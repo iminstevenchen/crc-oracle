@@ -1,4 +1,32 @@
+# ── 資料檔（原始 CSV 與其 Excel 分割版）──────────────────────
+# 排除理由是 repo 大小與整潔，不是保密：
+# index.html 本身已內嵌全部病患矩陣並公開部署。
+*.csv
+*.xlsx
+*.xls
+
+# ── 模型產物 ───────────────────────────────────────────────
+*.pkl
+02_model_模型/*/artifacts/
+02_model_模型/*/outputs/
+
+# ── 前端中介 JSON（內容已內嵌進 index.html）──────────────────
+population_scatter_famd_v3.json
+famd_frontend_blob.json
+
+# ── 簡報（還在修改中，暫不公開）─────────────────────────────
+05_slides_簡報/
+*.pptx
+*.potx
+
+# ── 開發環境雜物 ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.idea/
+.vscode/
 .DS_Store
-node_modules/
-.vercel/
 .vercel
+node_modules/
+
+# ── 其他對話的暫存輸出（不屬於本專案）─────────────────────
+Claude outputs/

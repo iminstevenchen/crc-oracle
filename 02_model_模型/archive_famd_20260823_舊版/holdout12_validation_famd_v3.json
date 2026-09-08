@@ -1,0 +1,79 @@
+{
+  "n": 12,
+  "cindex": 0.7568,
+  "note": "held-out僅12例，僅供交叉檢查，正式驗證請以5-fold CV為主。",
+  "patients": [
+    {
+      "SER_NO": 604666,
+      "os_time_days": 3979,
+      "os_event": 0,
+      "predicted_risk_score": 0.3065
+    },
+    {
+      "SER_NO": 606660,
+      "os_time_days": 1129,
+      "os_event": 0,
+      "predicted_risk_score": 0.2229
+    },
+    {
+      "SER_NO": 602666,
+      "os_time_days": 2937,
+      "os_event": 1,
+      "predicted_risk_score": 1.9622
+    },
+    {
+      "SER_NO": 606663,
+      "os_time_days": 350,
+      "os_event": 0,
+      "predicted_risk_score": 3.4587
+    },
+    {
+      "SER_NO": 604443,
+      "os_time_days": 1103,
+      "os_event": 1,
+      "predicted_risk_score": 0.9831
+    },
+    {
+      "SER_NO": 604447,
+      "os_time_days": 2899,
+      "os_event": 1,
+      "predicted_risk_score": 0.6293
+    },
+    {
+      "SER_NO": 608444,
+      "os_time_days": 3967,
+      "os_event": 0,
+      "predicted_risk_score": 0.6735
+    },
+    {
+      "SER_NO": 607444,
+      "os_time_days": 486,
+      "os_event": 1,
+      "predicted_risk_score": 6.0619
+    },
+    {
+      "SER_NO": 611333,
+      "os_time_days": 1464,
+      "os_event": 0,
+      "predicted_risk_score": 5.2534
+    },
+    {
+      "SER_NO": 602333,
+      "os_time_days": 1626,
+      "os_event": 1,
+      "predicted_risk_score": 1.704
+    },
+    {
+      "SER_NO": 604333,
+      "os_time_days": 2554,
+      "os_event": 0,
+      "predicted_risk_score": 0.8097
+    },
+    {
+      "SER_NO": 609333,
+      "os_time_days": 1071,
+      "os_event": 1,
+      "predicted_risk_score": 1.0905
+    }
+  ]
+}
