@@ -15,6 +15,12 @@ A StanCode SC201 project. A surgeon types a free-text clinical description; the 
 |---|---|---|
 | ![Step 1](screenshots/step1.png) | ![Step 2](screenshots/step2.png) | ![Step 3](screenshots/step3.png) |
 
+### Bilingual interface
+
+The whole interface switches between English and Traditional Chinese from the header — variable names, units, category levels, component interpretations and the worked examples all follow. The choice is remembered; without one, it follows the browser locale.
+
+![Language switch](bilingual.png)
+
 ---
 
 ## How it works
@@ -23,7 +29,7 @@ A StanCode SC201 project. A surgeon types a free-text clinical description; the 
 `68歲男性，第二期升結腸腺癌，中分化，CEA 12.5` or
 `68-year-old male, stage II ascending colon adenocarcinoma, moderately differentiated, CEA 12.5`
 
-**2 · Parse and confirm.** All 23 model features are shown as editable cells, each labeled with its variable name and colour-coded by provenance:
+**2 · Parse and confirm.** All 23 model features are shown as editable cells — age as one field (binned into 5 strata by the model), then 10 continuous and 12 categorical — each labeled with its variable name and colour-coded by provenance:
 
 | | Meaning |
 |---|---|
