@@ -330,7 +330,7 @@ footer{max-width:1180px;margin:0 auto;padding:22px;color:var(--faint);font-size:
       </div>
       <canvas id="pca" height="300"></canvas>
       <div class="leg">
-        <span><i style="background:#b8c8d6"></i><span data-i18n="pca.leg1">全體病患</span>（12,196）</span>
+        <span><i style="background:#b8c8d6"></i><span data-i18n="pca.leg1">全體病患</span><span id="legAll"></span></span>
         <span><i style="background:#0976c0"></i><span data-i18n="pca.leg2">相似族群</span></span>
         <span><i style="background:#c0392f;border-radius:50%"></i><span data-i18n="pca.leg3">目標病患</span></span>
       </div>
@@ -534,7 +534,7 @@ I18N.en={
  'out.n':'Cohort size','out.n.c':'{0} deaths during follow-up',
  'out.model':'Model: FAMD v3 ({0} features) · 5-fold CV C-index {1} · 12-case holdout C-index {2}',
  'pc.foot':'Explained variance is computed live as pc_sd² ÷ total inertia {0} ({1} continuous variables + {2} categorical indicator columns); the first three axes total about {3}% and all five about {4}%. FAMD computes these percentages differently from linear PCA (the denominator includes the inertia of the indicator matrix), so they are not comparable to a PCA explained_variance_ratio. Leading loadings come from the model’s FAMD coefficient file (column contributions); all five axes are computed values.',
- 'pc.note':'FAMD coordinates for this patient　{0} (unmentioned fields use the population median/mode). The cohort is every patient within a standardized distance of {1}, capped at {2}.',
+ 'pc.note':'FAMD coordinates for this patient: {0} (unmentioned fields use the population median/mode). The cohort is every patient within a standardized distance of {1}, capped at {2}.',
  'warn.box':'<b>Data version and limitations:</b> this page runs the <strong>FAMD v3 model</strong> (mixed continuous + categorical, {0} features, {1} training patients). Cox model 5-fold CV C-index ≈ {2}; 12-case holdout ≈ {3}. This is AI-de-identified synthetic data, so it is <strong>for methodology demonstration and research prototyping only</strong> — not for clinical decision-making and not citable as a clinical result.',
  'mode.sfx':' (population mode)','mode.only':'population mode',
  'dist.med':'median {0}　<span style="color:var(--faint)">(IQR {1}–{2})</span>',
@@ -606,6 +606,7 @@ function applyI18N(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.getAttribute('data-i18n'));});
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.getAttribute('data-i18n-ph'));});
   const s2=document.querySelector('#card2 .sub'); if(s2)s2.innerHTML=t('s2.sub',Nall.toLocaleString());
+  const lg=document.getElementById('legAll'); if(lg)lg.textContent=isZH()?'（'+Nall.toLocaleString()+'）':' ('+Nall.toLocaleString()+')';
   ['zh','en'].forEach(l=>{const b=document.getElementById('lang-'+l); if(b)b.classList.toggle('on',LANG===l);});
   fillModelMeta();
 }
@@ -1335,7 +1336,7 @@ function renderPCA_meaning(){
   const top=pcPct(0);
   box.innerHTML=(isZH()?PC_MEAN:PC_MEAN_EN).map((m,j)=>{
     const pct=pcPct(j);
-    const body=`<b>${m.name}</b>。${m.txt}`;
+    const body=`<b>${m.name}</b>${isZH()?'。':' — '}${m.txt}`;
     return `<div class="pc"><h4>PC${j+1} · ${pct.toFixed(2)}%</h4>
       <div class="bar"><i style="width:${(pct/top*100).toFixed(0)}%"></i></div><p>${body}</p></div>`;
   }).join('');
@@ -1360,7 +1361,7 @@ function updatePcNote(){
   if(!lastC)return;
   const p=lastC.p,meta=lastSearchMeta;
   document.getElementById("pcnote").textContent=
-    t('pc.note',[0,1,2,3,4].map(j=>`PC${j+1}=${p[j].toFixed(2)}`).join('　'),meta.radius.toFixed(2),SD_KMAX);
+    t('pc.note',[0,1,2,3,4].map(j=>`PC${j+1}=${p[j].toFixed(2)}`).join(isZH()?'　':'  '),meta.radius.toFixed(2),SD_KMAX);
 }
 function drawPCA(idx,p){
  const {x,w,h}=ctxOf('pca'),L=40,R=10,Tp=10,B=30;

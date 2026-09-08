@@ -15,6 +15,12 @@ A StanCode SC201 project. A surgeon types a free-text clinical description; the 
 |---|---|---|
 | ![Step 1](screenshots/step1.png) | ![Step 2](screenshots/step2.png) | ![Step 3](screenshots/step3.png) |
 
+### The FAMD component space
+
+Every dot is one real patient. Grey is the whole registry, blue the selected cohort, red the index patient — so you can see at a glance whether the cohort actually sits close. Any two of the five components can be plotted, and each axis carries its leading loadings.
+
+![FAMD component space](famd-space.png)
+
 ### Bilingual interface
 
 The whole interface switches between English and Traditional Chinese from the header — variable names, units, category levels, component interpretations and the worked examples all follow. The choice is remembered; without one, it follows the browser locale.
