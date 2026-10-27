@@ -17,14 +17,14 @@
 ## 資料夾導覽
 
 ```
-CRC-ORACLE 腸命天機/
+CRC-ORACLE/
 ├── README.md                       ← 你在這裡 · you are here
 ├── 01_data_資料/                   原始資料與 codebook · raw data & codebook
 ├── 02_model_模型/                  FAMD 訓練管線與模型產物 · training pipeline & artifacts
 │   ├── current_famd_age-layered_年齡分層版/   現行模型 · current model
 │   └── archive_famd_20260823_舊版/            封存模型 · archived model
-├── 03_website_網站/                單檔網站 + Vercel 部署 · single-file site & deployment
-│   └── deploy/                     ← GitHub repo 根目錄 · the GitHub repo root
+├── 03_website/                     單檔網站（PWA）· single-file site (PWA)
+│   └── deploy/                     ← Vercel 服務的那一層 · the folder Vercel serves
 ├── 04_docs_文件/                   報告與交接文件 · reports & handover docs
 │   └── archive_封存/
 ├── 05_slides_簡報/                 簡報檔 · slide decks
@@ -32,8 +32,8 @@ CRC-ORACLE 腸命天機/
 └── 99_assets_素材/                 截圖素材 · screenshots
 ```
 
-> ℹ️ **GitHub 上只有 `03_website_網站/deploy/` 這一層**（`index.html`、`README.md`、`DEPLOY.md`、`.gitignore`、`.nojekyll`）。
-> 其餘資料夾只存在於本機。
+> ℹ️ **repo 根目錄＝專案根目錄**（`iminstevenchen/crc-oracle`），Vercel 依根目錄 `vercel.json` 發佈 `03_website/deploy`。
+> `.gitignore` 排除資料檔（csv / xlsx）、模型檔（pkl）、簡報（pptx）等大檔，這些只存在於本機。
 
 ### 01_data_資料
 | 檔案 | 說明 |
@@ -69,12 +69,11 @@ CRC-ORACLE 腸命天機/
 | `癌症資料…_v2_part1~3.xlsx` | ⚠️ | `load_raw()` 實際讀的訓練資料來源（不是 CSV）—— **不可刪** |
 | `artifacts.pkl` / `export_frontend_data.py` / `similarity_api.py` | ❌ | 更早的 **PCA** 管線，已被 FAMD 取代 |
 
-### 03_website_網站
+### 03_website
 | 檔案 | 模型版本 | 說明 |
 |---|---|---|
 | `deploy/index.html` | `v3-famd-age5` | **唯一的網站來源**（＝線上版）。含 23 項手動輸入、PC1–PC5、300 人上限、中英切換、PWA |
 | `deploy/` 其他檔案 | — | `manifest.webmanifest`、`sw.js`、`icons/`（PWA）、README 截圖、`DEPLOY.md` |
-| `archive_封存/` | 舊版 | 兩個舊工作副本（`index_整合版.html` 為 `v3-famd`、`index_整合版_v4_age分層.html` 為 age 分層但缺 PWA 等），僅供回溯，不要再編輯 |
 
 Vercel 的輸出目錄由根目錄 `vercel.json` 指定為 `03_website/deploy`；repo 根目錄就是 git repo 根目錄。
 

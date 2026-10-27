@@ -1,43 +1,46 @@
 # 部署到 Vercel
 
-這個資料夾就是部署現成版：只有一個 `index.html`（整合版，內含真實 PCA/KM 引擎）。純靜態、不需 build。
+網站是單一 `index.html`（內嵌 12,196 位去識別合成病患與 FAMD 編碼器），加上 PWA 檔案（`manifest.webmanifest`、`sw.js`、`icons/`）。純靜態、不需 build。
 
 ## ⚠️ 部署前務必知道
-`index.html` 內嵌了 12,250 筆去識別合成病患資料。**公開網址 = 任何人都能下載這份資料。**
-這份是合成版可以展示；但**絕對不要**用同樣方式部署含真實病患資料的版本。
+`index.html` 內嵌了去識別**合成**病患資料。**公開網址 = 任何人都能下載這份資料。**
+合成版可以展示；但**絕對不要**用同樣方式部署含真實病患資料的版本。
 
 ---
 
-## 方法 A：Vercel CLI（最快，約 2 分鐘）
-在這個 `deploy/` 資料夾裡開終端機，依序執行：
+## 目前的部署方式（GitHub ↔ Vercel 自動部署）
+
+- GitHub repo：`iminstevenchen/crc-oracle`，**repo 根目錄就是專案根目錄**。
+- Vercel 專案：`gut-instinct`，網址 https://crc-oracle.vercel.app
+- 發佈哪一層由根目錄 `vercel.json` 的 `outputDirectory: 03_website/deploy` 決定，**不靠 Vercel 後台的 Root Directory 設定**。
+- `vercel.json` 同時替 `sw.js` 與 `manifest.webmanifest` 設定 headers（`sw.js` 不可被長時間快取）。
+
+### 更新流程
 
 ```bash
-npm i -g vercel        # 安裝一次即可
-vercel login           # 用 GitHub / Email 登入（會開瀏覽器）
-vercel                 # 第一次部署，一路按 Enter 用預設值
-vercel --prod          # 產生正式網址
+# 在 repo 根目錄
+git add 03_website/deploy/index.html          # 以及其他有改的檔案
+git commit -m "feat: 更新模型"
+git push origin main                          # Vercel 自動重新部署（約 1–2 分鐘）
 ```
 
-跑完會給你一個網址，例如 `https://crc-oracle-xxxx.vercel.app`，把它傳給組員即可。
+更新模型或網頁後，把 `03_website/deploy/sw.js` 的 `VERSION` 加 1，已安裝的 PWA 才會丟掉舊快取。
 
-## 方法 B：從 GitHub 匯入（適合之後持續更新）
-1. 把這個 `deploy/` 資料夾推上一個 GitHub repo（見下方「Git 已初始化」）。
-2. 到 https://vercel.com → **Add New… → Project** → 選 **Import Git Repository**。
-3. 選你的 repo → Framework Preset 選 **Other** → 直接 **Deploy**（不用改任何設定，Vercel 會自動把 `index.html` 放在網站根目錄）。
-4. 完成後給你 `xxx.vercel.app` 網址。之後 push 到 GitHub 會自動重新部署。
+> 換模型時的匯出指令見根目錄 `README.md` 的「常用流程 A」。
 
-### Git 已初始化
-我已在此資料夾 `git init` 並 commit 好。接上 GitHub：
-```bash
-git remote add origin https://github.com/<你的帳號>/<repo名>.git
-git branch -M main
-git push -u origin main
-```
+---
+
+## 部署後檢查 PWA
+
+1. 開 https://crc-oracle.vercel.app（改過後先 Cmd+Shift+R 強制重新整理）。
+2. Chrome 開發者工具 → Application → Manifest：名稱「腸命天機」、三個圖示都載入。
+3. Application → Service Workers：狀態為 *activated*。
+4. 切到飛航模式再開一次，STEP 1→3 應可完整執行。
 
 ---
 
 ## 想加存取限制（建議）
-Vercel 免費版的 **Deployment Protection → Vercel Authentication** 可限制只有你 Vercel 帳號/團隊成員登入才看得到（適合只給組員）。
+Vercel 免費版的 **Deployment Protection → Vercel Authentication** 可限制只有你 Vercel 帳號／團隊成員登入才看得到（適合只給組員）。
 專案 → Settings → Deployment Protection 開啟。完整密碼保護（給任意人一組密碼）需 Pro。
 
 ## 想改回不公開

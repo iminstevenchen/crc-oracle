@@ -105,8 +105,20 @@ Nothing is silently assumed. If the sentence didn't mention albumin, the card sa
 The site is a **single self-contained HTML file**. The full patient matrix and the FAMD encoder are embedded in it, so there is no backend, no build step and no network dependency:
 
 ```bash
-open index.html          # that's it
+open index.html                    # that's it
+python3 -m http.server 8000        # or serve it locally (needed to try the PWA features)
 ```
+
+### Install as an app (PWA)
+
+The site is a Progressive Web App and works offline once opened.
+
+| Platform | How |
+|---|---|
+| Android / desktop Chrome | Use the install icon in the address bar, or menu → *Install app* |
+| iPhone / iPad | Safari → Share → *Add to Home Screen* |
+
+Pages are fetched network-first, so a new deployment shows up on the next online visit; offline, the cached copy is used. When you change the model or the page, bump `VERSION` in `sw.js` so installed copies drop the old cache.
 
 Deployment is a static push — see [DEPLOY.md](DEPLOY.md).
 
