@@ -2,7 +2,14 @@
 <html lang="zh-Hant" data-font-size="large">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5081">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="腸命天機">
 <title>腸命天機 Gut Instinct · 相似病患智慧查詢</title>
 <meta name="description" content="Explore historically similar colorectal cancer cohorts using 12,196 de-identified synthetic records, FAMD similarity analysis, and Kaplan–Meier survival curves.">
 <meta property="og:type" content="website">
@@ -48,6 +55,7 @@ body{
   font-size:calc(14px * var(--font-scale));line-height:1.5;-webkit-font-smoothing:antialiased;
 }
 /* ---------- header ---------- */
+@media (display-mode:standalone){html header{padding-top:calc(14px + env(safe-area-inset-top))}body{padding-bottom:env(safe-area-inset-bottom)}}
 header{
   background:linear-gradient(120deg,var(--l800),var(--l500));
   color:#fff;padding:22px 26px;border-bottom:none;box-shadow:0 6px 20px rgba(10,43,71,.16);
@@ -56,6 +64,7 @@ header{
 .htitle{min-width:0;flex:1 1 auto}
 .hright{margin-left:auto;flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:7px;white-space:nowrap}
 .top-controls{display:flex;align-items:center;gap:7px}
+@media(max-width:640px){header{padding:14px 16px}.hbar{flex-wrap:wrap;row-gap:10px}.htitle{flex:1 1 calc(100% - 60px)}.hright{margin-left:0;flex:1 1 100%;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;white-space:normal}}
 .logo{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.16);
   display:flex;align-items:center;justify-content:center;font-size:calc(22px * var(--font-scale));flex:none;
   border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px)}
@@ -1819,5 +1828,10 @@ applyI18N();
 setFontSize(FONT_SIZE);
 initChips();
 
+</script>
+<script>
+if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});
+}
 </script>
 </body></html>

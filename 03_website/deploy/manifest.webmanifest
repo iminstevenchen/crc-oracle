@@ -1,0 +1,18 @@
+{
+  "name": "腸命天機 Gut Instinct · 相似病患智慧查詢",
+  "short_name": "腸命天機",
+  "description": "Explore historically similar colorectal cancer cohorts using de-identified synthetic records, FAMD similarity analysis, and Kaplan–Meier survival curves.",
+  "lang": "zh-Hant",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0b5081",
+  "background_color": "#f4f9fe",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
