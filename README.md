@@ -72,9 +72,11 @@ CRC-ORACLE 腸命天機/
 ### 03_website_網站
 | 檔案 | 模型版本 | 說明 |
 |---|---|---|
-| `index_整合版_v4_age分層.html` | `v3-famd-age5` | **最新**，含 23 項手動輸入、PC1–PC5、300 人上限、半徑修正 |
-| `index_整合版.html` | `v3-famd` | 舊版工作副本（＝目前線上版） |
-| `deploy/` | `v3-famd` | Vercel 部署資料夾（git repo，remote 指向 `iminstevenchen/crc-oracle`） |
+| `deploy/index.html` | `v3-famd-age5` | **唯一的網站來源**（＝線上版）。含 23 項手動輸入、PC1–PC5、300 人上限、中英切換、PWA |
+| `deploy/` 其他檔案 | — | `manifest.webmanifest`、`sw.js`、`icons/`（PWA）、README 截圖、`DEPLOY.md` |
+| `archive_封存/` | 舊版 | 兩個舊工作副本（`index_整合版.html` 為 `v3-famd`、`index_整合版_v4_age分層.html` 為 age 分層但缺 PWA 等），僅供回溯，不要再編輯 |
+
+Vercel 的輸出目錄由根目錄 `vercel.json` 指定為 `03_website/deploy`；repo 根目錄就是 git repo 根目錄。
 
 網站是**單一自包含 HTML**：12,196 位病患的資料與 FAMD 編碼器全部內嵌在 `const F={…}` 裡，離線可用、無後端。
 
@@ -105,7 +107,7 @@ CRC-ORACLE 腸命天機/
 cd "02_model_模型/current_famd_age-layered_年齡分層版"
 python train_famd_v3.py                                    # 產生 artifacts_famd.pkl
 python export_frontend_famd_blob.py \
-       --html "../../03_website_網站/index_整合版_v4_age分層.html"   # 就地換掉網站的 F blob
+       --html "../../03_website/deploy/index.html"                 # 就地換掉網站的 F blob
 ```
 
 `export_frontend_famd_blob.py` 一次匯出網站需要的全部：FAMD 編碼器（`V` / `prop` / `outer_mean` / `outer_scale` / `pc_sd` / `cat_categories` / `cat_modes`）＋ 每位病患的臨床與存活陣列。
@@ -116,14 +118,12 @@ Kevin 原本的 `export_frontend_data_famd.py` 只匯出展示用的三個 JSON�
 ### B. 部署
 
 ```bash
-cp "03_website_網站/index_整合版_v4_age分層.html" "03_website_網站/deploy/index.html"
-cd "03_website_網站/deploy"
-git add index.html && git commit -m "feat: 換上 age 分層 FAMD 模型"
-git push                                                   # Vercel 自動重新部署
+# 在 repo 根目錄執行
+git add 03_website/deploy/index.html && git commit -m "feat: 更新模型"
+git push origin main                                       # Vercel 自動重新部署
 ```
 
-> ⚠️ `deploy/index.html` 目前有 **120 行未 commit 的本機修改**（`git diff --stat` 可看）。
-> 覆蓋前先確認那些改動要不要保留：`cd 03_website_網站/deploy && git diff`。
+更新模型或網頁後，記得把 `03_website/deploy/sw.js` 的 `VERSION` 加 1，已安裝的 PWA 才會丟掉舊快取。
 
 ---
 
