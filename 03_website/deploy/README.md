@@ -84,7 +84,7 @@ Nothing is silently assumed. If the sentence didn't mention albumin, the card sa
 
 > The holdout column moves a lot because it is only 12 patients — one or two rank swaps shift it by several points. The 5-fold CV figure is the one to read.
 
-**Cohort selection.** The radius grows from the index patient in standardized-distance space until cumulative death events reach 20, clamped to 30–300 patients. If a manually-set radius contains nobody, the page says so and reports the distance to the nearest patient — it does not quietly substitute the nearest N.
+**Cohort selection.** The radius grows from the index patient in standardized-distance space until cumulative death events reach 20, clamped to 30–1000 patients. If a manually-set radius contains nobody, the page says so and reports the distance to the nearest patient — it does not quietly substitute the nearest N.
 
 ---
 

@@ -1035,7 +1035,7 @@ function famdEncode(raw){
 function projectPatient(){return famdEncode(buildRawFeatures());}
 
 let lastSearchMeta=null;
-const SD_KMIN=30, SD_KMAX=300, SD_MINEVENTS=20; /* 族群人數上限 300；至少湊足統計效力用的事件數 */
+const SD_KMIN=30, SD_KMAX=1000, SD_MINEVENTS=20; /* 族群人數上限 1000（依陳醫師建議，原 300）；至少湊足統計效力用的事件數 */
 function cohort(){
  const p=projectPatient();
  const uq=p.map((v,j)=>v/F.enc.pc_sd[j]);

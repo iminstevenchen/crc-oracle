@@ -16,7 +16,7 @@ flowchart TD
     C["<b>Aug 21 · Adjusted after physician feedback</b><br/>Renamed to CRC-ORACLE"]
     D["<b>PCA v3</b><br/>23 features (T/N/M substages, node ratio, pre-op labs…)<br/>5-fold CV C-index 0.7962"]
     E["<b>Aug 25 · FAMD v3</b><br/>Categorical variables keep their labels instead of being forced to ordinal codes<br/>5-fold CV C-index 0.7978"]
-    F["<b>~Aug 25–26 · Similar-cohort search redesigned</b><br/>Fixed K=100 → radius that grows until enough death events<br/>Cohort size clamped to 30–300 · user-adjustable radius"]
+    F["<b>~Aug 25–26 · Similar-cohort search redesigned</b><br/>Fixed K=100 → radius that grows until enough death events<br/>Cohort size clamped to 30–1000 · user-adjustable radius"]
     G["<b>Sep 3 · v3.1 age in 5 strata (current model)</b><br/>Age changes from a continuous to a categorical variable<br/>5-fold CV C-index 0.7995"]
     H["<b>Sep 3–9 · Interface finalized</b><br/>Chinese/English switch · fields renamed to data dictionary<br/>Clinical-use disclaimer"]
     I["<b>Oct 27 · PWA (current deployment)</b><br/>Installable and works offline · mobile header fix"]
@@ -53,7 +53,7 @@ Each node is one event, in order. Blue nodes are model changes and carry the 5-f
 | Physician feedback (Aug 21) | A physician asked for adjustments; what was asked is not documented. | commit `4a817ac` | Renamed to CRC-ORACLE |
 | 16 → 23 features (PCA v3) | The 16 features lacked T/N/M substages, lymph-node ratio and other key prognostic factors, so "similar" in PCA space disagreed with clinical intuition. | PCA v3 README | 5-fold CV C-index 0.7962; demo cohort 5-year OS 85.3% vs. 69.8% for all |
 | PCA → FAMD v3 (Aug 25) | PCA needs stage codes mapped to numbers by hand (T4a=4, T4b=4.5), which assumes distances between categories are meaningful. | FAMD section of the model README | CV 0.7978, "statistically the same level"; the cohort is less concentrated on right-sided tumors |
-| Fixed K=100 → adaptive radius | A fixed K ignores how many comparable patients are nearby; a fixed 0.1–0.5 SD radius found 0 patients at 0.1 SD and 11 at 0.3 SD. | Adaptive-search section of the model README | Cohort grows until ≥ 20 death events, clamped to 30–300 |
+| Fixed K=100 → adaptive radius | A fixed K ignores how many comparable patients are nearby; a fixed 0.1–0.5 SD radius found 0 patients at 0.1 SD and 11 at 0.3 SD. | Adaptive-search section of the model README | Cohort grows until ≥ 20 death events, clamped to 30–1000 |
 | Continuous age → 5 strata (Sep 3) | Measured survival is not linear in age; a linear "younger = higher weight" assumption was tested and rejected. | Age appendix | CV 0.7978 → 0.7995 |
 | Chinese/English switch (Sep 3) | So English-speaking physicians can use the tool directly. | commit `ce7b64b` | Language is remembered per browser |
 | PWA and mobile header fix (Oct 27) | Make the site installable and usable offline on phones and desktops; the header collapsed at phone width. | commit `d43b5ed` | Installable app; works offline |
@@ -126,7 +126,7 @@ flowchart LR
 
 ### 4.4 Similar-cohort search redesign
 - **Why:** A fixed K=100 says nothing about how many comparable patients actually sit near the index patient.
-- **How:** Each component axis is divided by its training-set standard deviation and combined into one distance. The search starts at 0.5 SD and widens until the cohort holds at least 20 death events, with cohort size clamped to [30, 300]. (The Aug 26 handoff doc lists an upper bound of 100; it was later relaxed to 300.)
+- **How:** Each component axis is divided by its training-set standard deviation and combined into one distance. The search starts at 0.5 SD and widens until the cohort holds at least 20 death events, with cohort size clamped to [30, 1000]. (The Aug 26 handoff doc lists an upper bound of 100; it was later relaxed to 300, then to 1000 on Oct 28 at Dr. 陳繹中's suggestion; the date of the 100 → 300 change is not recorded.)
 - **Why not just fix a radius of 0.1–0.5 SD:** The space is 5-dimensional, so two random patients are about √5 ≈ 2.24 SD apart. Measured: 0.1 SD returned 0 patients, 0.3 SD only 11, and 0.5 SD was the first radius that meant anything.
 - **Honest empty states:** If the cap is reached without enough events, the API returns `low_confidence`. If a manually set radius contains nobody, the page says so and shows the distance to the nearest patient instead of quietly substituting the nearest N.
 

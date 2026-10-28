@@ -85,7 +85,7 @@ CRC-ORACLE/
 
 | File | Model version | Description |
 |---|---|---|
-| `deploy/index.html` | `v3-famd-age5` | **The only site source** (what is live). 23 manual inputs, PC1–PC5, cohorts capped at 300, Chinese/English switch, PWA |
+| `deploy/index.html` | `v3-famd-age5` | **The only site source** (what is live). 23 manual inputs, PC1–PC5, cohorts capped at 1000, Chinese/English switch, PWA |
 | other files in `deploy/` | — | `manifest.webmanifest`, `sw.js`, `icons/` (PWA), README screenshots, `DEPLOY.md` |
 
 The site is a **single self-contained HTML file**. The 12,196 patients and the FAMD encoder are embedded in `const F={…}`, so it works offline with no backend.
@@ -140,7 +140,7 @@ After changing the model or the page, bump `VERSION` in `03_website/deploy/sw.js
 ## Technical highlights
 
 - **FAMD (Factor Analysis of Mixed Data)** handles continuous and categorical variables in one decomposition. Continuous variables are z-scored; categorical variables are one-hot encoded and scaled as `(ind − p)/√p`; both pass through an outer StandardScaler and are projected onto the SVD's `V`.
-- **Similar-cohort search.** The radius, in standardized distance, expands until the cohort holds at least 20 death events, with cohort size clamped to 30–300. The user can set the radius by hand. If the radius contains nobody, the page says so instead of quietly padding with the nearest 30.
+- **Similar-cohort search.** The radius, in standardized distance, expands until the cohort holds at least 20 death events, with cohort size clamped to 30–1000. The user can set the radius by hand. If the radius contains nobody, the page says so instead of quietly padding with the nearest 30.
 - **Survival analysis.** Kaplan–Meier with Greenwood 95% CI, plus in-hospital mortality (MT) and median post-operative length of stay.
 - **Model quality.** Cox PH 5-fold CV C-index went from 0.7978 to **0.7995** with the age-layered model. Survival risk is not linear in age: after adjusting for the other variables, risk at 80+ is about 2.3 times that of ages 50–60. See [`年齡分層方法學附錄.md`](04_docs_文件/年齡分層方法學附錄.md).
 

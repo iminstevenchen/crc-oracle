@@ -76,7 +76,7 @@ CRC-ORACLE/
 ### 03_website
 | 檔案 | 模型版本 | 說明 |
 |---|---|---|
-| `deploy/index.html` | `v3-famd-age5` | **唯一的網站來源**（＝線上版）。含 23 項手動輸入、PC1–PC5、300 人上限、中英切換、PWA |
+| `deploy/index.html` | `v3-famd-age5` | **唯一的網站來源**（＝線上版）。含 23 項手動輸入、PC1–PC5、1000 人上限、中英切換、PWA |
 | `deploy/` 其他檔案 | — | `manifest.webmanifest`、`sw.js`、`icons/`（PWA）、README 截圖、`DEPLOY.md` |
 
 Vercel 的輸出目錄由根目錄 `vercel.json` 指定為 `03_website/deploy`；repo 根目錄就是 git repo 根目錄。
@@ -133,7 +133,7 @@ git push origin main                                       # Vercel 自動重新
 ## 技術重點
 
 - **FAMD（Factor Analysis of Mixed Data）** — 同時處理連續與類別變項的降維。連續變項 z-score、類別變項 one-hot 後做 `(ind − p)/√p`，再經外層 StandardScaler，投影到 SVD 的 `V`。
-- **相似族群搜尋** — 以標準化距離為半徑自適應擴張，直到累積死亡事件數 ≥ 20，人數夾在 30–300 之間。半徑可由使用者手動調整；半徑內無人時顯示誠實的空狀態，不會偷偷補最近 30 位。
+- **相似族群搜尋** — 以標準化距離為半徑自適應擴張，直到累積死亡事件數 ≥ 20，人數夾在 30–1000 之間。半徑可由使用者手動調整；半徑內無人時顯示誠實的空狀態，不會偷偷補最近 30 位。
 - **存活分析** — Kaplan–Meier + Greenwood 95% CI；另呈現手術死亡率（MT）與中位術後住院天數。
 - **模型品質** — Cox PH 的 5-fold CV C-index：舊版 0.7978 → age 分層版 **0.7995**（存活風險對年齡非線性：調整其他變項後，80+ 的風險約為 50–60 歲的 2.3 倍，詳見 `04_docs_文件/年齡分層方法學附錄.md`）。
 
