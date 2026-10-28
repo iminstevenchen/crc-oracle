@@ -2,7 +2,7 @@
 // 策略：頁面 network-first（部署新模型後使用者立刻看到新版，離線才退回快取）；
 //       圖示等靜態檔 cache-first。網站無任何外部請求，所以安裝後可完全離線使用。
 // 更新模型或網頁時，把 VERSION 加 1 即可讓舊快取失效。
-const VERSION = 'crc-oracle-v2';
+const VERSION = 'crc-oracle-v3';
 const PRECACHE = [
   '/',
   '/manifest.webmanifest',
