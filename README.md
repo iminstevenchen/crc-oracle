@@ -77,7 +77,7 @@ CRC-ORACLE/
 >
 > As of the Sep 3 inventory, the CSV and xlsx files in all three locations had identical md5 hashes (12,250 rows × 197 columns).
 
-### 02_model_模型
+### 02_model_模型 (model)
 
 | Folder | Status | Description |
 |---|---|---|
@@ -99,7 +99,7 @@ CRC-ORACLE/
 | `癌症資料…_v2_part1~3.xlsx` | ⚠️ | What `load_raw()` actually reads for training (not the CSV). **Do not delete** |
 | `artifacts.pkl` / `export_frontend_data.py` / `similarity_api.py` | ❌ | Earlier **PCA** pipeline, superseded by FAMD |
 
-### 03_website
+### 03_website (site)
 
 | File | Model version | Description |
 |---|---|---|
@@ -108,14 +108,14 @@ CRC-ORACLE/
 
 The site is a **single self-contained HTML file**. The 12,196 patients and the FAMD encoder are embedded in `const F={…}`, so it works offline with no backend.
 
-### 04_docs_文件
+### 04_docs_文件 (docs)
 
 | File | Description |
 |---|---|
 | **`DEVELOPMENT_HISTORY.md`** (English) / `發展歷程.md` (中文) | **How the versions evolved, why each change was made, how each was evaluated, with timeline and flowcharts** |
-| `年齡分層方法學附錄.md` | Methodology appendix: why age is binned into 5 strata, with the supporting numbers (Chinese) |
-| `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | Milestone report (written before the age-layered model) |
-| `archive_封存/` | Outdated documents: August progress reports, the PCA-era README, the Aug 26 slide handoff, the Sep 3 cleanup inventory |
+| `年齡分層方法學附錄.md` | *Age-stratification methodology appendix.* Why age is binned into 5 strata, with the supporting numbers (written in Chinese) |
+| `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | *Project CRC-ORACLE milestone report.* Written before the age-layered model |
+| `archive_封存/` | *Archive.* Outdated documents kept as a record: August progress reports, the PCA-era README, the Aug 26 slide handoff, the Sep 3 cleanup inventory |
 
 ### 05_slides_簡報 (local only, git-ignored)
 
