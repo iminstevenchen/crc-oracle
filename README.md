@@ -7,13 +7,31 @@
 
 **Live demo → https://crc-oracle.vercel.app** · A StanCode SC201 project · Installable as a PWA, works offline
 
-📈 **Why this version?** How the system evolved, why each change was made, and how each was evaluated → [Development history](04_docs_文件/DEVELOPMENT_HISTORY.md)
-
 | 1 · Describe the patient | 2 · Review the parsed variables | 3 · Similar-cohort outcomes |
 |---|---|---|
 | ![Step 1](03_website/deploy/screenshots/step1.png) | ![Step 2](03_website/deploy/screenshots/step2.png) | ![Step 3](03_website/deploy/screenshots/step3.png) |
 
 For the interface walkthrough, the model, and the cohort-size arithmetic, see [`03_website/deploy/README.md`](03_website/deploy/README.md).
+
+## Development history: why this version
+
+CRC-ORACLE went from a PCA prototype to the current age-layered FAMD model in about three weeks. The chart shows the 5-fold CV C-index (the adopted metric) at each model change, with the other events on the same timeline.
+
+![Model quality and key events, Aug 15 – Oct 27, 2026](04_docs_文件/figures/development_timeline_en.png)
+
+| When | Change | Why | Result |
+|---|---|---|---|
+| Aug 15 | v1 prototype | First deployment: natural-language front end + PCA / Kaplan–Meier engine | Starting point |
+| Aug 19 | v2 data rerun | Recomputed on the v2 synthetic dataset, 12 cases held out for validation | Basis for all later versions |
+| Aug 21 | Physician feedback | Adjustments requested by the physician (content not documented) | Renamed CRC-ORACLE |
+| Aug 21–25 | PCA v3: 16 → 23 features | The 16 features lacked T/N/M substages and lymph-node ratio, so "similar" disagreed with clinical intuition | CV C-index 0.7962 |
+| Aug 25 | PCA → FAMD v3 | PCA codes stages as numbers by hand, which assumes distances between categories mean something | CV 0.7978 (same level) |
+| Aug 26 | Fixed K → adaptive radius | A fixed radius found 0 patients at 0.1 SD and 11 at 0.3 SD | Cohort grows to ≥ 20 death events |
+| Sep 3 | Age in 5 strata | Measured survival is not linear in age | CV 0.7978 → **0.7995** |
+| Sep 3 – Oct 27 | Interface and deployment | Chinese/English switch, clinical UI, `vercel.json`, PWA | Installable, works offline |
+| Oct 28 | Cohort cap 300 → 1000; Gutty guide mascot | Physician suggested a larger cap; added in-page usage guide | Cohort 30–1000 |
+
+Evaluation details, flowcharts and the gaps in the written record → **[full development history](04_docs_文件/DEVELOPMENT_HISTORY.md)**.
 
 ## Team
 
