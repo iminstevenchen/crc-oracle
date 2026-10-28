@@ -1,157 +1,171 @@
 # 腸命天機 · Project CRC-ORACLE
 
+**English** · [繁體中文](README.zh-TW.md)
+
 > **Real-World Intelligence for Personalized Colorectal Cancer Outcomes**
-> 大腸直腸癌相似病患智慧查詢 — 用一句自然語言描述病患，找出資料庫中最相似的一群病患，並給出存活曲線與術後結果。
+> Describe a colorectal cancer patient in one plain sentence. The system finds the most similar patients in a 12,196-case registry and returns their survival curve and post-operative outcomes.
 
-線上 Demo：https://crc-oracle.vercel.app ｜ StanCode SC201 專題
+**Live demo → https://crc-oracle.vercel.app** · A StanCode SC201 project · Installable as a PWA, works offline
 
-## 團隊分工
-| 成員 | 角色 |
+📈 **Why this version?** How the system evolved, why each change was made, and how each was evaluated → [Development history](04_docs_文件/DEVELOPMENT_HISTORY.md)
+
+| 1 · Describe the patient | 2 · Review the parsed variables | 3 · Similar-cohort outcomes |
+|---|---|---|
+| ![Step 1](03_website/deploy/screenshots/step1.png) | ![Step 2](03_website/deploy/screenshots/step2.png) | ![Step 3](03_website/deploy/screenshots/step3.png) |
+
+For the interface walkthrough, the model, and the cohort-size arithmetic, see [`03_website/deploy/README.md`](03_website/deploy/README.md).
+
+## Team
+
+| Member | Role |
 |---|---|
-| 陳繹中（組長） | 林口長庚大腸直腸外科主治醫師 — 專案協調、臨床驗證、資料來源、UI 方向 |
-| 陳奕閔 Steven | UI/UX 與前端整合 |
-| 鄭文森 Kevin、Sean | FAMD 降維與存活分析 |
+| 陳繹中 (lead) | Colorectal surgeon, Linkou Chang Gung Memorial Hospital: coordination, clinical validation, data source, UI direction |
+| 陳奕閔 Steven Chen | UI/UX and front-end integration |
+| 鄭文森 Kevin, Sean | Kevin: FAMD model and survival analysis. Sean: validation |
 
 ---
 
-## 資料夾導覽
+## Repository layout
 
 ```
 CRC-ORACLE/
-├── README.md                       ← 你在這裡 · you are here
-├── 01_data_資料/                   原始資料與 codebook · raw data & codebook
-├── 02_model_模型/                  FAMD 訓練管線與模型產物 · training pipeline & artifacts
-│   ├── current_famd_age-layered_年齡分層版/   現行模型 · current model
-│   └── archive_famd_20260823_舊版/            封存模型 · archived model
-├── 03_website/                     單檔網站（PWA）· single-file site (PWA)
-│   └── deploy/                     ← Vercel 服務的那一層 · the folder Vercel serves
-├── 04_docs_文件/                   報告與交接文件 · reports & handover docs
-│   └── archive_封存/
-├── 05_slides_簡報/                 簡報檔 · slide decks
-│   └── archive_封存/
-└── 99_assets_素材/                 截圖素材 · screenshots
+├── README.md                       ← you are here
+├── 01_data_資料/                   raw data and codebook (kept locally, git-ignored)
+├── 02_model_模型/                  FAMD training pipeline and model artifacts
+│   ├── current_famd_age-layered_年齡分層版/   current model
+│   └── archive_famd_20260823_舊版/            archived model
+├── 03_website/                     single-file site (PWA)
+│   └── deploy/                     the folder Vercel serves
+├── 04_docs_文件/                   development history, methodology, reports
+│   └── archive_封存/               outdated documents, kept as a record
+├── 05_slides_簡報/                 slide decks (kept locally, git-ignored)
+└── 99_assets_素材/                 old UI screenshots
 ```
 
-> ℹ️ **repo 根目錄＝專案根目錄**（`iminstevenchen/crc-oracle`），Vercel 依根目錄 `vercel.json` 發佈 `03_website/deploy`。
-> `.gitignore` 排除資料檔（csv / xlsx）、模型檔（pkl）、簡報（pptx）等大檔，這些只存在於本機。
+> The repo root is the project root (`iminstevenchen/crc-oracle`). Vercel publishes `03_website/deploy`, as set in the root `vercel.json`.
+> `.gitignore` excludes data files (csv / xlsx), model pickles (pkl) and slide decks (pptx), so those exist only on the local machine.
 
 ### 01_data_資料
-| 檔案 | 說明 |
-|---|---|
-| `癌症資料20072023_AI去識別擬真版_v2.csv` | 原始資料，12,250 列 × 197 欄（AI 去識別擬真版） |
-| `癌症資料_欄位定義20260612.xlsx` | 欄位定義 |
-| `癌症資料_資料字典與codebook.xlsx` | 官方 codebook（自然語言解析的對照依據） |
 
-> ⚠️ 兩份資料來源要分清楚：
-> - **訓練管線**讀的是 `02_model_模型/current_famd_age-layered_年齡分層版/` 底下的 **xlsx part1~3**（`train_v3.py` 的 `load_raw()`）
-> - **`export_frontend_famd_blob.py`** 讀的是 **CSV**（取 LOS / MT 兩個欄位）
+| File | Description |
+|---|---|
+| `癌症資料20072023_AI去識別擬真版_v2.csv` | Raw data, 12,250 rows × 197 columns (AI de-identified synthetic version) |
+| `癌症資料_欄位定義20260612.xlsx` | Column definitions |
+| `癌症資料_資料字典與codebook.xlsx` | Data dictionary / codebook (basis for the natural-language parsing) |
+
+> ⚠️ Keep the two data sources apart:
+> - The **training pipeline** reads the **xlsx part1–3** files inside `02_model_模型/current_famd_age-layered_年齡分層版/` (`load_raw()` in `train_v3.py`).
+> - **`export_frontend_famd_blob.py`** reads the **CSV** (for the LOS and MT columns).
 >
-> 三個位置的 CSV 與 xlsx md5 都相同，內容一致（12,250 列 × 197 欄）。清理建議見 `04_docs_文件/資料夾清理清單-20260903.md`。
+> As of the Sep 3 inventory, the CSV and xlsx files in all three locations had identical md5 hashes (12,250 rows × 197 columns).
 
 ### 02_model_模型
-| 資料夾 | 狀態 | 說明 |
-|---|---|---|
-| `current_famd_age-layered_年齡分層版/` | **現行** | Kevin 的 age-layer FAMD（原名 `5 age layer`）。10 連續 + 13 類別變項，cv5 C-index **0.7995** |
-| `archive_famd_20260823_舊版/` | 封存 | 8/22 舊版 FAMD（原名 `FAMD_V3_20260823`）。11 連續 + 12 類別，cv5 0.7978。**線上網站目前仍跑這一版** |
 
-**`current_famd_age-layered_年齡分層版/` 裡的檔案分兩套管線 —— 網站只用 FAMD 那套：**
-
-| 檔案 | 網站有用到 | 說明 |
+| Folder | Status | Description |
 |---|---|---|
-| `train_famd_v3.py` | ✅ | FAMD 訓練主程式 |
-| `artifacts_famd.pkl` | ✅ | 訓練產物（FAMD 編碼器 + 全體座標 + Cox） |
-| `famd_coefficients_v3.json` | ✅ | PC1–PC5 解釋變異與欄位貢獻度 |
-| `export_frontend_famd_blob.py` | ✅ | **從 pkl 匯出網站的 `F` blob**（見下方「換模型流程」） |
-| `export_frontend_data_famd.py` | — | Kevin 原本的展示用匯出（散佈圖 / 係數 / holdout） |
-| `similarity_api_famd.py` | — | Flask 版查詢 API（網站是純前端，不呼叫它） |
-| `validate_holdout.py` | — | 12 人 holdout 驗證（簡報數字的佐證） |
-| `train_v3.py` | ⚠️ | PCA 版訓練程式，但 `train_famd_v3.py` 會 `from train_v3 import load_raw, clean999, HOLDOUT_IDS` —— **必要相依，不可刪** |
-| `癌症資料…_v2_part1~3.xlsx` | ⚠️ | `load_raw()` 實際讀的訓練資料來源（不是 CSV）—— **不可刪** |
-| `artifacts.pkl` / `export_frontend_data.py` / `similarity_api.py` | ❌ | 更早的 **PCA** 管線，已被 FAMD 取代 |
+| `current_famd_age-layered_年齡分層版/` | **Current** | Kevin's age-layered FAMD (formerly `5 age layer`). 10 continuous + 13 categorical variables, 5-fold CV C-index **0.7995** |
+| `archive_famd_20260823_舊版/` | Archived | Earlier FAMD (formerly `FAMD_V3_20260823`). 11 continuous + 12 categorical, 5-fold CV 0.7978. The site ran this version before the age-layered model replaced it |
+
+**The current folder holds two parallel pipelines. The website uses only the FAMD one:**
+
+| File | Used by the site | Description |
+|---|---|---|
+| `train_famd_v3.py` | ✅ | FAMD training script |
+| `artifacts_famd.pkl` | ✅ | Training output (FAMD encoder + all coordinates + Cox model) |
+| `famd_coefficients_v3.json` | ✅ | PC1–PC5 explained variance and variable contributions |
+| `export_frontend_famd_blob.py` | ✅ | **Exports the site's `F` blob from the pkl** (see workflow A) |
+| `export_frontend_data_famd.py` | — | Kevin's original export for demo plots (scatter, coefficients, holdout) |
+| `similarity_api_famd.py` | — | Python query module (`build_response`); the site is front-end only and does not call it |
+| `validate_holdout.py` | — | 12-case holdout validation |
+| `train_v3.py` | ⚠️ | PCA-era training script, but `train_famd_v3.py` runs `from train_v3 import load_raw, clean999, HOLDOUT_IDS`. **Required dependency; do not delete** |
+| `癌症資料…_v2_part1~3.xlsx` | ⚠️ | What `load_raw()` actually reads for training (not the CSV). **Do not delete** |
+| `artifacts.pkl` / `export_frontend_data.py` / `similarity_api.py` | ❌ | Earlier **PCA** pipeline, superseded by FAMD |
 
 ### 03_website
-| 檔案 | 模型版本 | 說明 |
+
+| File | Model version | Description |
 |---|---|---|
-| `deploy/index.html` | `v3-famd-age5` | **唯一的網站來源**（＝線上版）。含 23 項手動輸入、PC1–PC5、300 人上限、中英切換、PWA |
-| `deploy/` 其他檔案 | — | `manifest.webmanifest`、`sw.js`、`icons/`（PWA）、README 截圖、`DEPLOY.md` |
+| `deploy/index.html` | `v3-famd-age5` | **The only site source** (what is live). 23 manual inputs, PC1–PC5, cohorts capped at 300, Chinese/English switch, PWA |
+| other files in `deploy/` | — | `manifest.webmanifest`, `sw.js`, `icons/` (PWA), README screenshots, `DEPLOY.md` |
 
-Vercel 的輸出目錄由根目錄 `vercel.json` 指定為 `03_website/deploy`；repo 根目錄就是 git repo 根目錄。
-
-網站是**單一自包含 HTML**：12,196 位病患的資料與 FAMD 編碼器全部內嵌在 `const F={…}` 裡，離線可用、無後端。
+The site is a **single self-contained HTML file**. The 12,196 patients and the FAMD encoder are embedded in `const F={…}`, so it works offline with no backend.
 
 ### 04_docs_文件
-| 檔案 | 說明 |
-|---|---|
-| `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | 里程碑報告 |
-| `PPT交接文件_給下一個對話.md` | 簡報製作交接說明 |
-| `資料夾清理清單-20260903.md` | 重複／可刪檔案盤點 |
-| `archive_封存/` | 8 月的三份進度報告 |
 
-### 05_slides_簡報
-| 檔案 | 說明 |
+| File | Description |
 |---|---|
-| `CRC-ORACLE_完整進度報告_含Steven介面_統一風格_20260826.pptx` | 全組合併版 |
-| `CRC-ORACLE_進度報告_Steven介面_v4.pptx` | Steven 介面段落（19 頁） |
-| `CRC-ORACLE_進度報告_完整三頁版.pptx` | 三頁濃縮版 |
-| `簡報_驗證方法_Sean_第二版.pptx` | 驗證方法 |
-| `archive_封存/` | v2、v3、Sean 第一版 |
+| **`DEVELOPMENT_HISTORY.md`** (English) / `發展歷程.md` (中文) | **How the versions evolved, why each change was made, how each was evaluated, with timeline and flowcharts** |
+| `年齡分層方法學附錄.md` | Methodology appendix: why age is binned into 5 strata, with the supporting numbers (Chinese) |
+| `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | Milestone report (written before the age-layered model) |
+| `archive_封存/` | Outdated documents: August progress reports, the PCA-era README, the Aug 26 slide handoff, the Sep 3 cleanup inventory |
+
+### 05_slides_簡報 (local only, git-ignored)
+
+| File | Description |
+|---|---|
+| `FINAL-CRC-ORACLE （2026-09-09).pptx` | Final presentation (Sep 9 version) |
+| `FINAL-CRC-ORACLE_標題字體統一版.pptx` | Version with unified title fonts |
+| `Steven_逐字稿_2頁.md` | Speaker script for Steven's section |
+| `SC201 Apr2026 B組.png` | Image |
 
 ---
 
-## 常用流程
+## Common workflows
 
-### A. 換模型 → 更新網站（Kevin 重訓之後）
+### A. Replace the model and update the site (after Kevin retrains)
 
 ```bash
 cd "02_model_模型/current_famd_age-layered_年齡分層版"
-python train_famd_v3.py                                    # 產生 artifacts_famd.pkl
+python train_famd_v3.py                                    # produces artifacts_famd.pkl
 python export_frontend_famd_blob.py \
-       --html "../../03_website/deploy/index.html"                 # 就地換掉網站的 F blob
+       --html "../../03_website/deploy/index.html"         # replaces the site's F blob in place
 ```
 
-`export_frontend_famd_blob.py` 一次匯出網站需要的全部：FAMD 編碼器（`V` / `prop` / `outer_mean` / `outer_scale` / `pc_sd` / `cat_categories` / `cat_modes`）＋ 每位病患的臨床與存活陣列。
-Kevin 原本的 `export_frontend_data_famd.py` 只匯出展示用的三個 JSON，不含編碼器與病患陣列，所以網站無法只靠它運作。
+`export_frontend_famd_blob.py` exports everything the site needs in one pass: the FAMD encoder (`V` / `prop` / `outer_mean` / `outer_scale` / `pc_sd` / `cat_categories` / `cat_modes`) plus each patient's clinical and survival arrays. Kevin's original `export_frontend_data_famd.py` exports only three JSON files for plots, without the encoder or patient arrays, so the site cannot run on it alone.
 
-**環境需求**：要在跑過 `train_famd_v3.py` 的同一個 Python 環境執行（pkl 內含 prince 的 FAMD 物件）。不需要 lifelines。
+**Environment:** run it in the same Python environment that ran `train_famd_v3.py` (the pkl contains `prince` FAMD objects). `lifelines` is not needed.
 
-### B. 部署
+### B. Deploy
 
 ```bash
-# 在 repo 根目錄執行
-git add 03_website/deploy/index.html && git commit -m "feat: 更新模型"
-git push origin main                                       # Vercel 自動重新部署
+# from the repo root
+git add 03_website/deploy/index.html && git commit -m "feat: update model"
+git push origin main                                       # Vercel redeploys automatically
 ```
 
-更新模型或網頁後，記得把 `03_website/deploy/sw.js` 的 `VERSION` 加 1，已安裝的 PWA 才會丟掉舊快取。
+After changing the model or the page, bump `VERSION` in `03_website/deploy/sw.js` so installed PWAs drop their old cache.
 
 ---
 
-## 技術重點
+## Technical highlights
 
-- **FAMD（Factor Analysis of Mixed Data）** — 同時處理連續與類別變項的降維。連續變項 z-score、類別變項 one-hot 後做 `(ind − p)/√p`，再經外層 StandardScaler，投影到 SVD 的 `V`。
-- **相似族群搜尋** — 以標準化距離為半徑自適應擴張，直到累積死亡事件數 ≥ 20，人數夾在 30–300 之間。半徑可由使用者手動調整；半徑內無人時顯示誠實的空狀態，不會偷偷補最近 30 位。
-- **存活分析** — Kaplan–Meier + Greenwood 95% CI；另呈現手術死亡率（MT）與中位術後住院天數。
-- **模型品質** — Cox PH 的 5-fold CV C-index：舊版 0.7978 → age 分層版 **0.7995**（存活風險對年齡非線性，50–70 歲最低、80+ 最高）。
+- **FAMD (Factor Analysis of Mixed Data)** handles continuous and categorical variables in one decomposition. Continuous variables are z-scored; categorical variables are one-hot encoded and scaled as `(ind − p)/√p`; both pass through an outer StandardScaler and are projected onto the SVD's `V`.
+- **Similar-cohort search.** The radius, in standardized distance, expands until the cohort holds at least 20 death events, with cohort size clamped to 30–300. The user can set the radius by hand. If the radius contains nobody, the page says so instead of quietly padding with the nearest 30.
+- **Survival analysis.** Kaplan–Meier with Greenwood 95% CI, plus in-hospital mortality (MT) and median post-operative length of stay.
+- **Model quality.** Cox PH 5-fold CV C-index went from 0.7978 to **0.7995** with the age-layered model. Survival risk is not linear in age: after adjusting for the other variables, risk at 80+ is about 2.3 times that of ages 50–60. See [`年齡分層方法學附錄.md`](04_docs_文件/年齡分層方法學附錄.md).
 
-### 病患人數怎麼算出 12,196
+### How 12,196 patients is derived
+
 ```
-12,250  原始列數（CSV / xlsx）
-  − 42  追蹤天數 ≤ 0（同日進出、無真實追蹤資訊）
-  − 12  holdout 驗證病例
+12,250  rows in the export (CSV / xlsx)
+  − 42  follow-up ≤ 0 days (same-day admission and discharge, no real follow-up)
+  − 12  held out for validation
 ─────
-12,196  訓練樣本，也是網站上的數字
+12,196  training sample, and the number shown on the site
 ```
-資料版本自 2026-08-19 起未變動；新舊模型用的是同一份資料（md5 已比對）。
 
-### 網站 `F` blob 的隱藏編碼規則（反推自舊版，已寫進匯出腳本）
-- `LOS`（術後住院天數）＝ CSV 的 `DD − OD`（民國日期），8 位缺日期存 `null`
-- `MT` CSV 用 `1=否 / 2=是`，網站存 `0/1`（共 101 位）
-- 「月」換算基準是 **30.4368**（不是 30.4375）
+The data have not changed since 2026-08-19; the old and new models use the same data (md5 compared).
+
+### Hidden encoding rules of the site's `F` blob (reverse-engineered from the earlier version, now in the export script)
+
+- `LOS` (post-operative length of stay) = the CSV's `DD − OD` (dates in the ROC calendar); 8 patients with a missing date are stored as `null`.
+- `MT` is `1 = no / 2 = yes` in the CSV and `0/1` on the site (101 patients).
+- Months are converted with **30.4368** days, not 30.4375.
 
 ---
 
-## 重要限制
+## Limitations
 
-目前使用 **v2 去識別擬真資料**（剔除 12 例 holdout，納入 12,196 位）。期別分層已呈合理臨床分離，但仍為去識別擬真資料，**僅供方法學與研究示範，不可作為臨床判讀或投稿依據**。網站頁面上已明確標註。
+The data are **v2 AI de-identified synthetic records** (12 holdout cases excluded, 12,196 patients used). Stage stratification behaves sensibly, but de-identification distorts clinical relationships between fields. **This is for methodology demonstration and research prototyping only: not for clinical decisions, and not citable as a clinical result.** The page states this limitation to the user directly.
 
-部署注意：`index.html` 內嵌全部病患資料，**公開網址 = 任何人都能下載這份資料**。合成版可以展示，但絕不可用同樣方式部署含真實病患資料的版本。Vercel 免費版可用 Settings → Deployment Protection 限制存取。
+**Deployment warning:** `index.html` embeds the entire dataset, so **anything deployed publicly can be downloaded in full.** That is acceptable for synthetic data. Never deploy a build containing real patient records this way. On Vercel's free plan, Settings → Deployment Protection can restrict access.

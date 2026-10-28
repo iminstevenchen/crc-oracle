@@ -65,7 +65,7 @@ Nothing is silently assumed. If the sentence didn't mention albumin, the card sa
 |---|---|
 | BMI, ELN (nodes examined), PLN (positive nodes), LN_ratio, WID, LEN, RM (resection margin), LAB_CEA_log, LAB_ALB, LAB_HB | SEX, **age_group**, TNM_stage, T_stage, N_stage, M_stage, site_group, HT_adenoca, HG_grade, GA_infiltrative, CI, IR_curative, OT_emergency |
 
-**Age is binned, not continuous.** Survival risk is not linear in age — 50–60 and 60–70 carry the *lowest* risk, under-50 sits in the middle (early-onset CRC is intrinsically more aggressive), and 80+ is highest. Recoding age into `<50 / 50-60 / 60-70 / 70-80 / 80+` improved 5-fold CV C-index from 0.7978 to **0.7995**.
+**Age is binned, not continuous.** Survival risk is not linear in age. After adjusting for the other 22 variables, the under-50 group has the *lowest* hazard (HR 0.854 vs. 50–60), 60–70 is about the same as 50–60 (0.947), and risk then jumps at 70–80 (1.379) and 80+ (2.310). Unadjusted 5-year OS tells a different story — under-50 sits in the middle (74.2%) — because younger patients are diagnosed at a later stage (22.0% stage IV vs. 14.7% at 60–70), not because youth is protective. Recoding age into `<50 / 50-60 / 60-70 / 70-80 / 80+` improved the 5-fold CV C-index from 0.7978 to **0.7995**. (Details: [`04_docs_文件/年齡分層方法學附錄.md`](../../04_docs_文件/年齡分層方法學附錄.md))
 
 **Explained variance** (denominator is the total inertia of the mixed indicator matrix, 59 — these percentages are *not* comparable to a linear PCA's `explained_variance_ratio_`):
 
