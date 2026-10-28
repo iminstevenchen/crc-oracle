@@ -33,7 +33,28 @@ CRC-ORACLE went from a PCA prototype to the current age-layered FAMD model in ab
 
 Evaluation details, flowcharts and the gaps in the written record → **[full development history](04_docs_文件/DEVELOPMENT_HISTORY.md)**.
 
-> **Data and privacy.** This repository contains **no real patient records**. The dataset is an AI de-identified *synthetic* version supplied by the clinical lead. The raw CSV/Excel files are git-ignored and have never been committed ([`01_data_資料`](01_data_資料/README.md) explains this). The one exception to know about: the published site embeds a row-level matrix of the *synthetic* dataset (serial number, survival time/event and 23 clinical variables per record) so it can run without a backend.
+## Data and privacy
+
+**This repository contains no real patient records.** The dataset behind CRC-ORACLE is an **AI de-identified synthetic version** supplied by the clinical lead (陳繹中). It is for methodology demonstration and research prototyping only.
+
+| Item | In this repository? |
+|---|---|
+| Raw data files (`.csv`, `.xlsx`) | **No.** Git-ignored and never committed ([`01_data_資料`](01_data_資料/README.md)) |
+| Model files (`.pkl`) | No. Git-ignored |
+| Row-level matrix of the *synthetic* dataset, embedded in the published site (`03_website/deploy/index.html`) | **Yes.** Needed so the site runs without a backend |
+| Names, medical record numbers, national ID numbers, contact details, hospital names | **No.** Never present |
+| Real calendar dates | **No.** Only derived durations (days) |
+
+**What the site embeds for each of the 12,196 synthetic records:** a serial number, survival time and event, post-operative length of stay, in-hospital mortality, and the model's 23 clinical variables (age appears only as one of 5 age strata).
+
+**Check it yourself.** This prints nothing, because no data file was ever committed:
+
+```bash
+git log --all --oneline -- '*.csv' '*.xlsx' '*.pkl'
+```
+
+**Limits.** Results describe a synthetic cohort and are not a diagnosis, prognosis or treatment recommendation. Do not cite them as clinical findings. Because the site is public, anyone can download the embedded synthetic matrix; never deploy a build containing real patient records this way.
+<!-- TODO: add how the synthetic data were generated and any ethics/IRB statement, once confirmed with the clinical lead. -->
 
 ## Team
 
