@@ -33,6 +33,8 @@ CRC-ORACLE went from a PCA prototype to the current age-layered FAMD model in ab
 
 Evaluation details, flowcharts and the gaps in the written record → **[full development history](04_docs_文件/DEVELOPMENT_HISTORY.md)**.
 
+> **Data and privacy.** This repository contains **no real patient records**. The dataset is an AI de-identified *synthetic* version supplied by the clinical lead. The raw CSV/Excel files are git-ignored and have never been committed ([`01_data_資料`](01_data_資料/README.md) explains this). The one exception to know about: the published site embeds a row-level matrix of the *synthetic* dataset (serial number, survival time/event and 23 clinical variables per record) so it can run without a backend.
+
 ## Team
 
 | Member | Role |
@@ -48,7 +50,7 @@ Evaluation details, flowcharts and the gaps in the written record → **[full de
 ```
 CRC-ORACLE/
 ├── README.md                       ← you are here
-├── 01_data_資料/                   raw data and codebook (kept locally, git-ignored)
+├── 01_data_資料/                   data notice only: no patient data on GitHub (files kept locally, git-ignored)
 ├── 02_model_模型/                  FAMD training pipeline and model artifacts
 │   ├── current_famd_age-layered_年齡分層版/   current model
 │   └── archive_famd_20260823_舊版/            archived model
