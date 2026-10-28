@@ -63,13 +63,13 @@ CRC-ORACLE/
 > The repo root is the project root (`iminstevenchen/crc-oracle`). Vercel publishes `03_website/deploy`, as set in the root `vercel.json`.
 > `.gitignore` excludes data files (csv / xlsx), model pickles (pkl) and slide decks (pptx), so those exist only on the local machine.
 
-### 01_data_資料
+### 01_data_資料 (data)
 
 | File | Description |
 |---|---|
-| `癌症資料20072023_AI去識別擬真版_v2.csv` | Raw data, 12,250 rows × 197 columns (AI de-identified synthetic version) |
-| `癌症資料_欄位定義20260612.xlsx` | Column definitions |
-| `癌症資料_資料字典與codebook.xlsx` | Data dictionary / codebook (basis for the natural-language parsing) |
+| `癌症資料20072023_AI去識別擬真版_v2.csv` | *Cancer data 2007–2023, AI de-identified synthetic version, v2.* Raw data, 12,250 rows × 197 columns |
+| `癌症資料_欄位定義20260612.xlsx` | *Cancer data, column definitions (2026-06-12).* Describes each of the 197 columns |
+| `癌症資料_資料字典與codebook.xlsx` | *Cancer data, data dictionary and codebook.* Basis for the site's natural-language parsing |
 
 > ⚠️ Keep the two data sources apart:
 > - The **training pipeline** reads the **xlsx part1–3** files inside `02_model_模型/current_famd_age-layered_年齡分層版/` (`load_raw()` in `train_v3.py`).
