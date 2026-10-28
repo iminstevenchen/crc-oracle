@@ -72,7 +72,7 @@ CRC-ORACLE/
 │   └── deploy/                     ← Vercel 服務的那一層 · the folder Vercel serves
 ├── 04_docs_文件/                   報告與交接文件 · reports & handover docs
 │   └── archive_封存/
-├── 05_slides_簡報/                 簡報檔 · slide decks
+├── 05_slides_簡報/                 最終簡報（其餘草稿僅存本機）
 │   └── archive_封存/
 └── 99_assets_素材/                 截圖素材 · screenshots
 ```
@@ -132,7 +132,9 @@ Vercel 的輸出目錄由根目錄 `vercel.json` 指定為 `03_website/deploy`�
 | `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | 里程碑報告（早於 FAMD 年齡分層版） |
 | `archive_封存/` | 過時文件：8 月進度報告、PCA 時期 README、8/26 簡報交接、9/3 資料夾清理清單 |
 
-### 05_slides_簡報（僅存本機，`.gitignore` 排除）
+### 05_slides_簡報
+
+最終簡報 `FINAL-CRC-ORACLE_標題字體統一版.pptx` 已公開於此，其餘檔案僅存本機（`.gitignore` 排除）。
 | 檔案 | 說明 |
 |---|---|
 | `FINAL-CRC-ORACLE （2026-09-09).pptx` | 期末簡報（9/9 版） |

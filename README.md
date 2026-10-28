@@ -79,7 +79,7 @@ CRC-ORACLE/
 │   └── deploy/                     the folder Vercel serves
 ├── 04_docs_文件/                   development history, methodology, reports
 │   └── archive_封存/               outdated documents, kept as a record
-├── 05_slides_簡報/                 slide decks (kept locally, git-ignored)
+├── 05_slides_簡報/                 final slide deck (other drafts kept locally)
 └── 99_assets_素材/                 old UI screenshots
 ```
 
@@ -140,7 +140,9 @@ The site is a **single self-contained HTML file**. The 12,196 patients and the F
 | `腸命天機_Project_CRC-ORACLE_Milestone_Report.docx` | *Project CRC-ORACLE milestone report.* Written before the age-layered model |
 | `archive_封存/` | *Archive.* Outdated documents kept as a record: August progress reports, the PCA-era README, the Aug 26 slide handoff, the Sep 3 cleanup inventory |
 
-### 05_slides_簡報 (local only, git-ignored)
+### 05_slides_簡報 (slides)
+
+The final deck `FINAL-CRC-ORACLE_標題字體統一版.pptx` is published here. The other files stay local (git-ignored).
 
 | File | Description |
 |---|---|
